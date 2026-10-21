@@ -1,0 +1,21 @@
+# Datasets (downloaded locally, do not commit)
+datasets/
+*.zip
+*.tar.gz
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Notebooks / outputs
+.ipynb_checkpoints/
+*.h5
+*.keras
