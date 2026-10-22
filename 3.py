@@ -13,20 +13,18 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 # 1. Load dataset
 path = Path(r"D:\ImageNet")
+folders = sorted([f for f in path.iterdir() if f.is_dir()])[:10]
 X, labels = [], []
 
-for folder in sorted(path.iterdir())[:10]:
-    if folder.is_dir():
-        imgs = [
-            file for file in folder.iterdir()
-            if file.suffix.lower() in
-            (".jpg", ".jpeg", ".png", ".bmp")
-        ]
+for folder in folders:
+    imgs = [f for f in folder.iterdir()
+            if f.suffix.lower() in [".jpg", ".jpeg", ".png", ".bmp"]]
 
-        for file in imgs[:100]:
-            img = image.load_img(file, target_size=(224, 224))
-            X.append(image.img_to_array(img))
-            labels.append(folder.name)
+    for file in imgs[:100]:
+        img = image.load_img(file, target_size=(224, 224))
+        arr = image.img_to_array(img)
+        X.append(preprocess_input(np.expand_dims(arr, axis=0))[0])
+        labels.append(folder.name)
 
 X = np.array(X, dtype=np.float32)
 
@@ -40,7 +38,7 @@ print("Images:", len(X))
 
 # 3. Extract ResNet50 features
 base = ResNet50(weights="imagenet", include_top=False, pooling="avg")
-features = base.predict(preprocess_input(X.copy()), batch_size=16, verbose=1)
+features = base.predict(X, batch_size=16, verbose=1)
 
 print("Feature shape:", features.shape)
 
